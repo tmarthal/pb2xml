@@ -1,5 +1,7 @@
 #include <sstream>
+#include <stdint.h>
 #include <iostream>
+#include <iomanip>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/descriptor.pb.h>
 
@@ -20,7 +22,12 @@ namespace protobuf {
 
 
 XmlFormat::Printer::Printer() {}
-XmlFormat::Printer::~Printer() {}
+XmlFormat::Printer::~Printer() {
+	for (size_t i = 0; i < _string_pointers_.size(); ++i) {
+		delete _string_pointers_[i];
+	}
+	_string_pointers_.clear();
+}
 
 void XmlFormat::Printer::PrintToXmlString(const Message& message,
                                         string* output) {
@@ -92,7 +99,7 @@ void XmlFormat::Printer::PrintXmlField(const Message& message,
 }
 
 
-string XmlFormat::Printer::GetXmlFieldName(const Message& message,
+const string & XmlFormat::Printer::GetXmlFieldName(const Message& message,
                                          const Reflection* reflection,
                                          const FieldDescriptor* field) {
 	if (field->is_extension()) {
@@ -136,11 +143,13 @@ void XmlFormat::Printer::PrintXmlFieldValue(
           reflection->GetRepeated##METHOD(message, field, field_index) :     \
           reflection->Get##METHOD(message, field);                          \
         stringstream number_stream; \
-	    number_stream << value; \
+	    number_stream << setprecision(12) << value; \
+		string *pStr = new string(number_stream.str()); \
+		_string_pointers_.push_back(pStr); \
     	rapidxml::xml_node<> *string_node = doc->allocate_node(              \
     	  rapidxml::node_element,                                      \
     	  GetXmlFieldName(message, reflection, field).c_str(),         \
-    	  number_stream.str().c_str());                                              \
+    	  pStr->c_str());                                              \
     	node->append_node(string_node);                                      \
         break;                                                               \
       }
