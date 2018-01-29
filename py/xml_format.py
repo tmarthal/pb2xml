@@ -4,7 +4,7 @@
 from xml.dom.minidom import Document
 
 from google.protobuf import descriptor
-from google.protobuf.text_format import _CEscape
+from google.protobuf.text_encoding import CEscape
 
 __all__ = [ 'MessageToXML', 'MessageToDOM', 
             'CreateXmlMessage', 'CreateXmlField', 'CreateXmlFieldValue', 
@@ -71,7 +71,7 @@ def CreateXmlFieldValue(field, value, doc, element):
         element.appendChild(field_value)
     elif field.cpp_type == descriptor.FieldDescriptor.CPPTYPE_STRING:
         # should this be escaped?
-        field_value = doc.createTextNode(str(_CEscape(value)))
+        field_value = doc.createTextNode(str(CEscape(value, True)))
         element.appendChild(field_value)
         pass
     elif field.cpp_type == descriptor.FieldDescriptor.CPPTYPE_BOOL:
