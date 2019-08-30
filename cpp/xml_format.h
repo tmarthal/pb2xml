@@ -7,6 +7,7 @@
 #define GOOGLE_PROTOBUF_XML_FORMAT_H__
 
 #include <string>
+#include <vector>
 #include "rapidxml-1.13/rapidxml.hpp"
 
 #include <google/protobuf/message.h>
@@ -56,7 +57,7 @@ class LIBPROTOBUF_EXPORT XmlFormat {
 
     // Utility function to return the right name function based
     // on field type
-    string GetXmlFieldName(const Message& message,
+    const string & GetXmlFieldName(const Message& message,
                         const Reflection* reflection,
                         const FieldDescriptor* field);
 
@@ -69,6 +70,10 @@ class LIBPROTOBUF_EXPORT XmlFormat {
                  		rapidxml::xml_document<>* doc,
              			rapidxml::xml_node<>* node);
 
+    // Hold new allocaated object pointers for later deleting at destructor function,
+    // because rapidxml only holds pointers of strings(const char *)
+    // that we have to make sure the pointers are valid while using them.
+    std::vector<std::string*> _string_pointers_;
   };
 
 

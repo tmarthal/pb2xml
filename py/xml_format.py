@@ -71,7 +71,8 @@ def CreateXmlFieldValue(field, value, doc, element):
         element.appendChild(field_value)
     elif field.cpp_type == descriptor.FieldDescriptor.CPPTYPE_STRING:
         # should this be escaped?
-        field_value = doc.createTextNode(str(CEscape(value, True)))
+#        field_value = doc.createTextNode(str(_CEscape(value)))
+        field_value = doc.createTextNode(value)
         element.appendChild(field_value)
         pass
     elif field.cpp_type == descriptor.FieldDescriptor.CPPTYPE_BOOL:
