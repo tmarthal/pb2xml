@@ -4,7 +4,7 @@
 from xml.dom.minidom import Document
 
 from google.protobuf import descriptor
-from google.protobuf.text_format import _CEscape
+from google.protobuf.text_encoding import CEscape
 
 __all__ = [ 'MessageToXML', 'MessageToDOM', 
             'CreateXmlMessage', 'CreateXmlField', 'CreateXmlFieldValue', 
